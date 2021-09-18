@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport'
+        content='width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>DoctorEw's Lab</title>
+
+    <link rel='stylesheet' href='https://unpkg.com/tailwindcss@^2/dist/base.min.css' />
+    <link rel='stylesheet' href='https://unpkg.com/tailwindcss@^2/dist/components.min.css' />
+    <link rel='stylesheet' href='https://unpkg.com/tailwindcss@^2/dist/utilities.min.css' />
+    <link rel='stylesheet' href='https://unpkg.com/@tailwindcss/custom-forms@^0/dist/custom-forms.min.css' />
+    <link rel='stylesheet' href='https://unpkg.com/daisyui@latest/dist/full.css' />
+
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Source%20Code%20Pro');
+
+        html,
+        body {
+            font-family: 'Source Code Pro', monospace, sans-serif;
+            color: #010f66;
+        }
+
+        h1 {
+            color: rgba(1, 15, 102, 0.75)
+        }
+
+        #welcome {
+            background-image: url(https://doctorew.com/shuttlebay/axis_of_awesome.svg);
+        }
+
+        #skippistan {
+            background-image: url(https://doctorew.com/shuttlebay/skippy.svg)
+        }
+    </style>
+
+</head>
+
+<body>
+    <canvas id='c' class='fixed'></canvas>
+    <main id='main'
+        class='main relative h-screen flex-grow container mx-auto justify-center max-w-screen-lg space-y-10 bg-white bg-opacity-50'>
+        <section id='top' class='items-center w-full bg-white bg-opacity-50 shadow-xl m-0'>
+            <!-- <div class="welcome "> -->
+            <h1 id='welcome' class='mx-auto flex-grow p-10 m-0 bg-no-repeat
+            bg-white pl-40 font-bold text-5xl'>
+                Welcome to DoctorEw's Lab
+            </h1>
+            <picture>
+                <source srcset='https://www.doctorew.com/shuttlebay/doctor-doctor-doctor.webp' type='image/webp' />
+            </picture>
+            <!-- </div> -->
+        </section>
+        <section id='chat' class='items-center w-full bg-white bg-opacity-50
+        shadow-xl m-0'>
+            <h1 id='skippistan' class='mx-auto flex-auto p-10 m-0 bg-no-repeat
+            bg-white pl-40 font-bold text-5xl'>
+                Chat with Skippy the Magnificent!:
+            </h1>
+            <div class="chat_holder grid grid-cols-2 gap-4 flex">
+                <div class="form_holder flex-auto">
+                    <form class='mx-auto p-6'>
+                        <div class='input text '>
+                            <label for='chat_box' class='active' />
+                            <textarea id='chat_box' class='textarea' name='chat_box'
+                                placeholder='Chat with Skippy the Magnificent!' required=''></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div id='chat_log' class="chat_log flex-auto"></div>
+            </div>
+        </section>
+    </main>
+
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js'></script>
+    <script>
+        const vers = "0.2.16"
+
+        console.log(`version: ${vers}`)
+
+        const img_doctor_doctor =
+            "https://www.doctorew.com/shuttlebay/doctor-doctor-doctor-1024.png";
+
+        const animejs_bg = () => {
+            const c = document.getElementById("c");
+            c.classList.add("flex-grow", "min-h-0", "min-w-0", "h-screen");
+            const ctx = c.getContext("2d");
+            let cH;
+            let cW;
+            let bgColor = "#FF6138";
+            const animations = [];
+            const circles = [];
+            const colorPicker = (() => {
+                const colors = ["#FF6138", "#FFBE53", "#2980B9", "#282741"];
+                let index = 0;
+                const next = () => {
+                    index = index++ < colors.length - 1 ? index : 0;
+                    return colors[index];
+                };
+                const current = () => colors[index];
+                return {
+                    next: next,
+                    current: current
+                };
+            })();
+            const removeAnimation = (animation) => {
+                let index;
+                index = animations.indexOf(animation);
+                if (index > -1) animations.splice(index, 1);
+            };
+            const calcPageFillRadius = (x, y) => {
+                let l = Math.max(x - 0, cW - x);
+                let h = Math.max(y - 0, cH - y);
+                return Math.sqrt(Math.pow(l, 2) + Math.pow(h, 2));
+            };
+            const addClickListeners = () => {
+                document.addEventListener("touchstart", handleEvent);
+                document.addEventListener("mousedown", handleEvent);
+            };
+
+            function handleEvent(e) {
+                if (e.touches) {
+                    e.preventDefault();
+                    e = e.touches[0];
+                }
+                const currentColor = colorPicker.current();
+                const nextColor = colorPicker.next();
+                const targetR = calcPageFillRadius(e.pageX, e.pageY);
+                const rippleSize = Math.min(200, cW * 0.4);
+                const minCoverDuration = 750;
+                const pageFill = new Circle({
+                    x: e.pageX,
+                    y: e.pageY,
+                    r: 0,
+                    fill: nextColor
+                });
+                const fillAnimation = anime({
+                    targets: pageFill,
+                    r: targetR,
+                    duration: Math.max(targetR / 2, minCoverDuration),
+                    easing: "easeOutQuart",
+                    complete: function () {
+                        bgColor = pageFill.fill;
+                        removeAnimation(fillAnimation);
+                    }
+                });
+                const ripple = new Circle({
+                    x: e.pageX,
+                    y: e.pageY,
+                    r: 0,
+                    fill: currentColor,
+                    stroke: {
+                        width: 3,
+                        color: currentColor
+                    },
+                    opacity: 1
+                });
+                const rippleAnimation = anime({
+                    targets: ripple,
+                    r: rippleSize,
+                    opacity: 0,
+                    easing: "easeOutExpo",
+                    duration: 900,
+                    complete: removeAnimation
+                });
+                const particles = [];
+                for (let i = 0; i < 32; i++) {
+                    const particle = new Circle({
+                        x: e.pageX,
+                        y: e.pageY,
+                        fill: currentColor,
+                        r: anime.random(24, 48)
+                    });
+                    particles.push(particle);
+                }
+                const particlesAnimation = anime({
+                    targets: particles,
+                    x: function (particle) {
+                        return particle.x + anime.random(rippleSize, -rippleSize);
+                    },
+                    y: function (particle) {
+                        return particle.y + anime.random(rippleSize * 1.15, -rippleSize * 1.15);
+                    },
+                    r: 0,
+                    easing: "easeOutExpo",
+                    duration: anime.random(1000, 1300),
+                    complete: removeAnimation
+                });
+                animations.push(fillAnimation, rippleAnimation, particlesAnimation);
+            }
+
+            function extend(a, b) {
+                for (let key in b) {
+                    if (b.hasOwnProperty(key)) {
+                        a[key] = b[key];
+                    }
+                }
+                return a;
+            }
+            var Circle = function (opts) {
+                extend(this, opts);
+            };
+            Circle.prototype.draw = function () {
+                ctx.globalAlpha = this.opacity || 1;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI, false);
+                if (this.stroke) {
+                    ctx.strokeStyle = this.stroke.color;
+                    ctx.lineWidth = this.stroke.width;
+                    ctx.stroke();
+                }
+                if (this.fill) {
+                    ctx.fillStyle = this.fill;
+                    ctx.fill();
+                }
+                ctx.closePath();
+                ctx.globalAlpha = 1;
+            };
+            var animate = anime({
+                duration: Infinity,
+                update: function () {
+                    ctx.fillStyle = bgColor;
+                    ctx.fillRect(0, 0, cW, cH);
+                    animations.forEach(function (anim) {
+                        anim.animatables.forEach(function (animatable) {
+                            animatable.target.draw();
+                        });
+                    });
+                }
+            });
+            var resizeCanvas = function () {
+                cW = window.innerWidth;
+                cH = window.innerHeight;
+                c.width = cW * devicePixelRatio;
+                c.height = cH * devicePixelRatio;
+                ctx.scale(devicePixelRatio, devicePixelRatio);
+            };
+            (function init() {
+                resizeCanvas();
+                if (window.CP) {
+                    // CodePen's loop detection was causin' problems
+                    // and I have no idea why, so...
+                    window.CP.PenTimer.MAX_TIME_IN_LOOP_WO_EXIT = 6000;
+                }
+                window.addEventListener("resize", resizeCanvas);
+                addClickListeners();
+                if (!!window.location.pathname.match(/fullcpgrid/)) {
+                    startFauxClicking();
+                }
+                handleInactiveUser();
+            })();
+
+            function handleInactiveUser() {
+                const inactive = setTimeout(function () {
+                    fauxClick(cW / 2, cH / 2);
+                }, 2000);
+
+                function clearInactiveTimeout() {
+                    clearTimeout(inactive);
+                    document.removeEventListener("mousedown", clearInactiveTimeout);
+                    document.removeEventListener("touchstart", clearInactiveTimeout);
+                }
+                document.addEventListener("mousedown", clearInactiveTimeout);
+                document.addEventListener("touchstart", clearInactiveTimeout);
+            }
+
+            function startFauxClicking() {
+                setTimeout(function () {
+                    fauxClick(
+                        anime.random(cW * 0.2, cW * 0.8),
+                        anime.random(cH * 0.2, cH * 0.8)
+                    );
+                    startFauxClicking();
+                }, anime.random(200, 900));
+            }
+
+            function fauxClick(x, y) {
+                const fauxClick = new Event("mousedown");
+                fauxClick.pageX = x;
+                fauxClick.pageY = y;
+                document.dispatchEvent(fauxClick);
+            }
+        };
+        const draw_image = async (src) => {
+            const image = new Image();
+            image.src = src;
+            await image.decode();
+            // img is ready to use
+            console.log(image, `width: ${image.width}, height: ${image.height}`);
+            const picture = document.querySelector("picture");
+            const canvas = document.createElement("canvas");
+            canvas.width = image.width;
+            canvas.height = image.height;
+
+            const context = canvas.getContext("2d");
+            context.drawImage(image, canvas.width / 2 - image.width / 2, 0);
+            picture.appendChild(canvas);
+        };
+
+        draw_image(img_doctor_doctor).then(animejs_bg);
+
+        /* CHAT */
+        let logger = {};
+        let message = "What's up, Doc?";
+        let uri = "https://skippy.doctorew.com/chat";
+
+        const load = () => {
+            //async
+            let fetch_message = async () => {
+                const settings = {
+                    method: 'POST',
+                    headers: {
+                        Accept: 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        msg: message,
+                    })
+                }
+
+                let uri_to_fetch = uri; // + encodeURIComponent(message);
+                let message_response = await fetch(uri_to_fetch, settings);
+                if (!message_response.ok) {
+                    throw new Error(`HTTP error! status: ${message_response.status}`);
+                }
+                return await message_response.json()
+
+            }
+            fetch_message().then((data) => {
+                    console.log("|-o-|", data, `load event detected: ${JSON.stringify(data)} || ${data.statusCode} |||
+        ${data.message}`);
+
+                    let returned_message;
+
+                    if (data.message) {
+                        returned_message = unescape(data.message);
+                        console.log(`awesome message: ${returned_message}`);
+                        display_message(returned_message)
+                    }
+                })
+                .catch((error) => {
+                    console.log(`ERROR! ${error}`);
+                    message = "returned_message"
+                });
+        }
+        window.onload = load;
+        const display_message = (chat_data) => {
+            const div_chat_log = document.getElementById("chat_log");
+
+            console.log(`display this: ${typeof chat_data} , ${chat_data}`);
+
+            const splitLines = str => str.split(/\n/g).filter(string => string !== "");
+            let arr_lines = splitLines(chat_data.replace(/\n?###/, ''))
+            arr_lines.reverse();
+            arr_lines.forEach((line) => {
+
+                console.log(`|-o-| line: ${line} :: isAwesome: ${line.includes("skippy_the_magnificent")}`)
+                let new_div = document.createElement('div');
+                let new_p = document.createElement('p');
+                let new_div_class = line.includes("skippy_the_magnificent") ? "skippy" : "lowly_human";
+                new_div.classList.add(new_div_class);
+                new_div.classList.add("chat_log_item");
+                new_p.classList.add("chat_log_item_line");
+                new_p.textContent = line.replace(/^\w+\{\}:/, '').replace("&#39;", "'")
+                //new_div.textContent = line.replace(/^\w+:/, '');
+                new_div.prepend(new_p);
+                div_chat_log.prepend(new_div);
+            });
+        }
+
+        const relay_message = () => {
+            message = document.querySelector("#chat_box").value || null;
+
+            if (message) {
+                console.log(`|-oo-| relay_message ${message}`);
+                load();
+            } else {
+                console.log(`|-oo-| relay_message ${message}`);
+            }
+        }
+
+        document.querySelector("#chat_submit").addEventListener("click", (event) => {
+            event.preventDefault();
+            console.log(`|-o-| Prevented form submit ${JSON.stringify(event)}`);
+            relay_message();
+        }, false);
+
+        chat_box.addEventListener('keydown', function (e) {
+            if (e.keyCode == 13) {
+                event.preventDefault();
+                console.log(this.form);
+                this.form.querySelector("button").click();
+                this.value = "";
+            }
+        });
+    </script>
+
+</body>
+
+</html>
