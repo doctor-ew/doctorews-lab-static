@@ -21,6 +21,7 @@
         body {
             font-family: 'Source Code Pro', monospace, sans-serif;
             color: #010f66;
+            margin: 0;
         }
 
         h1 {
@@ -31,8 +32,62 @@
             background-image: url(https://doctorew.com/shuttlebay/axis_of_awesome.svg);
         }
 
-        #skippistan {
+        #doctorew_contact {
+            background-image: url(https://www.doctorew.com/shuttlebay/doctor-doctor-doctor-1024.png);
+        }
+
+        #skippistan,
+        .skippy_the_magnificent {
             background-image: url(https://doctorew.com/shuttlebay/skippy.svg)
+        }
+
+        .lowly_human {
+            background-image: url(https://doctorew.com/shuttlebay/merry-band-of-pirates.svg)
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative;
+            vertical-align: baseline;
+        }
+
+        sup {
+            top: -0.3em;
+            vertical-align: super;
+        }
+
+        sub {
+            bottom: -0.25em;
+            vertical-align: sub;
+        }
+
+        a {
+            position: relative;
+            color: #000;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #000;
+        }
+
+        a::before {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 100%;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #000;
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        a:hover::before {
+            transform: scaleX(1);
         }
     </style>
 
@@ -41,44 +96,64 @@
 <body>
     <canvas id='c' class='fixed'></canvas>
     <main id='main'
-        class='main relative h-screen flex-grow container mx-auto justify-center max-w-screen-lg space-y-10 bg-white bg-opacity-50'>
-        <section id='top' class='items-center w-full bg-white bg-opacity-50 shadow-xl m-0'>
-            <!-- <div class="welcome "> -->
-            <h1 id='welcome' class='mx-auto flex-grow p-10 m-0 bg-no-repeat
-            bg-white pl-40 font-bold text-5xl'>
+        class='main relative flex-grow container mx-auto justify-center max-w-screen-lg space-y-10 bg-white bg-opacity-50 w-full'>
+        <section id='top' class='items-center w-full m-0'>
+            <!-- <picture>
+      <source srcset='https://www.doctorew.com/shuttlebay/doctor-doctor-doctor.webp' type='image/webp' />
+    </picture> -->
+            <h1 id='welcome' class='mx-auto flex-grow p-10 m-0 bg-no-repeat bg-white pl-40 font-bold text-5xl'>
                 Welcome to DoctorEw's Lab
             </h1>
-            <picture>
-                <source srcset='https://www.doctorew.com/shuttlebay/doctor-doctor-doctor.webp' type='image/webp' />
-            </picture>
-            <!-- </div> -->
+            <div id="doctorew_contact">
+
+                <h2 id='doctorew'
+                    class='mx-auto flex-grow p-10 m-0 bg-no-repeat bg-white bg-opacity-80 pl-40 font-bold text-xl'>
+                    <span class="block text-3xl mt-2 mb-4">Andrew Schillinger<sup>(He/Him)</sup></span>
+                    <ul>
+                        <li class="inline">Senior Technology Executive</li>
+                        <li class="inline"> ● AI Leader</li>
+                        <li class="inline"> ● Director of Emerging Technology & Innovation</li>
+                        <li class="inline"> ● Business Growth Strategy</li>
+                        <li class="inline"> ● 15+ years’ experience delivering data-driven digital disruption that
+                            transforms the way people connect
+                    </ul>
+                </h2>
+                <h3 id='contact-area'
+                    class='mx-auto flex-grow p-10 m-0 bg-no-repeat bg-white bg-opacity-80 pl-40 pt-0 font-bold text-xl'>
+                    <a href="https://www.linkedin.com/in/andrew-schillinger/" target="_blank" rel="noopener noreferrer"
+                        class="animate-pulse">LinkedIn</a> \\ <a href="https://github.com/doctor-ew/" target="_blank"
+                        rel="noopener noreferrer" class="animate-pulse hover:animate-bounce">github</a> \\ <a
+                        href="javascript:void(0);" rel="noopener noreferrer"
+                        class="animate-pulse hover:animate-bounce">drew[at]doctorew[dot]com</a>
+                </h3>
+            </div>
         </section>
-        <section id='chat' class='items-center w-full bg-white bg-opacity-50
-        shadow-xl m-0'>
+        <section id='chat' class='items-center w-full m-0'>
             <h1 id='skippistan' class='mx-auto flex-auto p-10 m-0 bg-no-repeat
             bg-white pl-40 font-bold text-5xl'>
                 Chat with Skippy the Magnificent!:
             </h1>
-            <div class="chat_holder grid grid-cols-2 gap-4 flex">
-                <div class="form_holder flex-auto">
+            <div class="chat_holder grid grid-cols-1 gap-4 flex">
+                <div class="form_holder block">
                     <form class='mx-auto p-6'>
-                        <div class='input text '>
-                            <label for='chat_box' class='active' />
-                            <textarea id='chat_box' class='textarea' name='chat_box'
-                                placeholder='Chat with Skippy the Magnificent!' required=''></textarea>
-                        </div>
+                        <!-- <div class='input text '> -->
+                        <label for='chat_box' class='active'></label>
+                        <textarea id='chat_box' class='textarea w-full text-gray-200' name='chat_box'
+                            placeholder='Chat with Skippy the Magnificent!' required=''></textarea>
+                        <!-- </div> -->
+                        <button type="submit" name="submit" class="submit hidden" id="chat_submit">Submit</button>
                     </form>
                 </div>
-                <div id='chat_log' class="chat_log flex-auto"></div>
+                <div id='chat_log' class="chat_log grid grid-cols-2 gap-4 flex"></div>
             </div>
         </section>
     </main>
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js'></script>
     <script>
-        const vers = "0.2.16"
+        const vers = "1.1.1";
 
-        console.log(`version: ${vers}`)
+        console.log(`version: ${vers}`);
 
         const img_doctor_doctor =
             "https://www.doctorew.com/shuttlebay/doctor-doctor-doctor-1024.png";
@@ -192,7 +267,8 @@
             }
 
             function extend(a, b) {
-                for (let key in b) {
+                for (let
+                        key in b) {
                     if (b.hasOwnProperty(key)) {
                         a[key] = b[key];
                     }
@@ -240,7 +316,7 @@
             (function init() {
                 resizeCanvas();
                 if (window.CP) {
-                    // CodePen's loop detection was causin' problems
+                    // CodePen's loop detection was causin' problems 
                     // and I have no idea why, so...
                     window.CP.PenTimer.MAX_TIME_IN_LOOP_WO_EXIT = 6000;
                 }
@@ -263,17 +339,17 @@
                     document.removeEventListener("touchstart", clearInactiveTimeout);
                 }
                 document.addEventListener("mousedown", clearInactiveTimeout);
-                document.addEventListener("touchstart", clearInactiveTimeout);
+                document.addEventListener("touchstart",
+                    clearInactiveTimeout);
             }
 
             function startFauxClicking() {
                 setTimeout(function () {
-                    fauxClick(
-                        anime.random(cW * 0.2, cW * 0.8),
-                        anime.random(cH * 0.2, cH * 0.8)
-                    );
-                    startFauxClicking();
-                }, anime.random(200, 900));
+                        fauxClick(
+                            anime.random(cW * 0.2, cW * 0.8), anime.random(cH * 0.2, cH * 0.8));
+                        startFauxClicking();
+                    },
+                    anime.random(200, 900));
             }
 
             function fauxClick(x, y) {
@@ -299,8 +375,8 @@
             picture.appendChild(canvas);
         };
 
-        draw_image(img_doctor_doctor).then(animejs_bg);
-
+        //draw_image(img_doctor_doctor).then(animejs_bg);
+        animejs_bg();
         /* CHAT */
         let logger = {};
         let message = "What's up, Doc?";
@@ -310,65 +386,92 @@
             //async
             let fetch_message = async () => {
                 const settings = {
-                    method: 'POST',
+                    method: "POST",
                     headers: {
-                        Accept: 'application/json',
-                        'Content-Type': 'application/json',
+                        Accept: "application/json",
+                        "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        msg: message,
+                        msg: message
                     })
-                }
+                };
 
                 let uri_to_fetch = uri; // + encodeURIComponent(message);
                 let message_response = await fetch(uri_to_fetch, settings);
                 if (!message_response.ok) {
                     throw new Error(`HTTP error! status: ${message_response.status}`);
                 }
-                return await message_response.json()
-
-            }
-            fetch_message().then((data) => {
-                    console.log("|-o-|", data, `load event detected: ${JSON.stringify(data)} || ${data.statusCode} |||
-        ${data.message}`);
+                return await message_response.json();
+            };
+            fetch_message()
+                .then((data) => {
+                    window.chat_data = data;
+                    console.log(
+                        "|-o-| load func",
+                        data,
+                        `typeof ${data} load event detected: ${JSON.stringify(data)} || ${
+                data.statusCode
+                } |||
+                ${data.message}`
+                    );
 
                     let returned_message;
 
-                    if (data.message) {
-                        returned_message = unescape(data.message);
+                    if (data) {
+                        returned_message = data;
                         console.log(`awesome message: ${returned_message}`);
-                        display_message(returned_message)
+                        display_message(returned_message);
                     }
                 })
                 .catch((error) => {
                     console.log(`ERROR! ${error}`);
-                    message = "returned_message"
+                    message = "returned_message";
                 });
-        }
+        };
         window.onload = load;
+
         const display_message = (chat_data) => {
             const div_chat_log = document.getElementById("chat_log");
+            const arr_classnames = ["skippy_the_magnificent", "lowly_human"];
 
-            console.log(`display this: ${typeof chat_data} , ${chat_data}`);
+            window.cd = chat_data;
 
-            const splitLines = str => str.split(/\n/g).filter(string => string !== "");
-            let arr_lines = splitLines(chat_data.replace(/\n?###/, ''))
-            arr_lines.reverse();
-            arr_lines.forEach((line) => {
-
-                console.log(`|-o-| line: ${line} :: isAwesome: ${line.includes("skippy_the_magnificent")}`)
-                let new_div = document.createElement('div');
-                let new_p = document.createElement('p');
-                let new_div_class = line.includes("skippy_the_magnificent") ? "skippy" : "lowly_human";
-                new_div.classList.add(new_div_class);
-                new_div.classList.add("chat_log_item");
-                new_p.classList.add("chat_log_item_line");
-                new_p.textContent = line.replace(/^\w+\{\}:/, '').replace("&#39;", "'")
+            arr_classnames.forEach((className) => {
+                let new_div = document.createElement("div");
+                let new_p = document.createElement("p");
+                //let new_div_class = line.includes("skippy_the_magnificent") ? "skippy" : "lowly_human";
+                console.log(
+                    "|-o-| line: ",
+                    chat_data,
+                    className,
+                    chat_data[className],
+                    `:: ${className}`
+                );
+                new_div.classList.add(className);
+                new_div.classList.add(
+                    "chat_log_item",
+                    "flex-auto",
+                    "p-10",
+                    "m-0",
+                    "bg-no-repeat",
+                    "bg-white"
+                );
+                className == "lowly_human" ?
+                    new_div.classList.add("pl-40") :
+                    new_div.classList.add("pl-36");
+                new_p.classList.add(
+                    "chat_log_item_line",
+                    "bg-white",
+                    "bg-opacity-80",
+                    "w-full",
+                    "h-full"
+                );
+                new_p.textContent = chat_data[className];
                 //new_div.textContent = line.replace(/^\w+:/, '');
                 new_div.prepend(new_p);
                 div_chat_log.prepend(new_div);
             });
-        }
+        };
 
         const relay_message = () => {
             message = document.querySelector("#chat_box").value || null;
@@ -379,15 +482,19 @@
             } else {
                 console.log(`|-oo-| relay_message ${message}`);
             }
-        }
+        };
 
-        document.querySelector("#chat_submit").addEventListener("click", (event) => {
-            event.preventDefault();
-            console.log(`|-o-| Prevented form submit ${JSON.stringify(event)}`);
-            relay_message();
-        }, false);
+        document.querySelector("#chat_submit").addEventListener(
+            "click",
+            (event) => {
+                event.preventDefault();
+                console.log(`|-o-| Prevented form submit ${JSON.stringify(event)}`);
+                relay_message();
+            },
+            false
+        );
 
-        chat_box.addEventListener('keydown', function (e) {
+        chat_box.addEventListener("keydown", function (e) {
             if (e.keyCode == 13) {
                 event.preventDefault();
                 console.log(this.form);
