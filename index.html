@@ -123,7 +123,11 @@
                     <a href="https://www.linkedin.com/in/andrew-schillinger/" target="_blank" rel="noopener noreferrer"
                         class="animate-pulse">LinkedIn</a> \\ <a href="https://github.com/doctor-ew/" target="_blank"
                         rel="noopener noreferrer" class="animate-pulse hover:animate-bounce">github</a> \\ <a
-                        href="javascript:void(0);" rel="noopener noreferrer"
+                        href="https://doctorew.com/Andrew_Schillinger_resume_engineering.pdf" target="_blank"
+                        rel="noopener noreferrer" class="animate-pulse hover:animate-bounce">resume</a> \\ <a
+                        href="https://doctorew.medium.com/" target="_blank" rel="noopener noreferrer"
+                        class="animate-pulse hover:animate-bounce">blog</a> \\ <a href="javascript:void(0);"
+                        rel="noopener noreferrer"
                         class="animate-pulse hover:animate-bounce">drew[at]doctorew[dot]com</a>
                 </h3>
             </div>
@@ -131,7 +135,11 @@
         <section id='chat' class='items-center w-full m-0'>
             <h1 id='skippistan' class='mx-auto flex-auto p-10 m-0 bg-no-repeat
             bg-white pl-40 font-bold text-5xl'>
-                Chat with Skippy the Magnificent!:
+                Chat with Skippy the Magnificent! <br /><sub class="text-lg">(From <a
+                        href="https://www.craigalanson.com/books" target="_blank" rel="noopener noreferrer"
+                        class="animate-pulse">Craig Alanson's ExForce series</a>) using OpenAI's GPT-3 model \\ <a
+                        href="https://github.com/doctor-ew/skippy-the-magnificent-python" target="_blank"
+                        rel="noopener noreferrer" class="animate-pulse hover:animate-bounce">repo</a> </sub>
             </h1>
             <div class="chat_holder grid grid-cols-1 gap-4 flex">
                 <div class="form_holder block">
@@ -151,7 +159,7 @@
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js'></script>
     <script>
-        const vers = "1.1.1";
+        const vers = "1.1.5";
 
         console.log(`version: ${vers}`);
 
@@ -316,7 +324,7 @@
             (function init() {
                 resizeCanvas();
                 if (window.CP) {
-                    // CodePen's loop detection was causin' problems 
+                    // CodePen 's loop detection was causing problems 
                     // and I have no idea why, so...
                     window.CP.PenTimer.MAX_TIME_IN_LOOP_WO_EXIT = 6000;
                 }
@@ -451,18 +459,18 @@
                 new_div.classList.add(
                     "chat_log_item",
                     "flex-auto",
-                    "p-10",
                     "m-0",
                     "bg-no-repeat",
                     "bg-white"
                 );
                 className == "lowly_human" ?
-                    new_div.classList.add("pl-40") :
-                    new_div.classList.add("pl-36");
+                    new_p.classList.add("pl-40") :
+                    new_p.classList.add("pl-36");
                 new_p.classList.add(
                     "chat_log_item_line",
                     "bg-white",
-                    "bg-opacity-80",
+                    "bg-opacity-60",
+                    "p-10",
                     "w-full",
                     "h-full"
                 );
